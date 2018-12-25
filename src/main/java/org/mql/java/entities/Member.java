@@ -1,5 +1,6 @@
 package org.mql.java.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity
 @Table(name = "member")
@@ -33,6 +35,14 @@ public class Member {
 	
 	@Column(name="password")	
    private String password ; 
+	
+	@ManyToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} )
+	@JoinTable(
+			name="teach", 
+			joinColumns=@JoinColumn(name="memb_id"),
+			inverseJoinColumns=@JoinColumn(name="mod_id")
+			)
+	private List<Module> modules;
 	  
 	@ManyToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} )
 	@JoinTable(
@@ -86,7 +96,8 @@ public class Member {
 		this.password = password;
 	}
 	
-	
+	@OneToMany(mappedBy= "member" , cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	@JoinColumn(name="form_id")
 	public List<Formation> getFormations() {
 		return formations;
 	}
@@ -94,11 +105,31 @@ public class Member {
 	public void setFormations(List<Formation> formations) {
 		this.formations = formations;
 	}
+	
+	
+
+	public List<Module> getModules() {
+		return modules;
+	}
+
+	public void setModules(List<Module> modules) {
+		this.modules = modules;
+	}
 
 	@Override
 	public String toString() {
 		return "Member [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
 				+ ", password=" + password + "]";
 	}
+	
+	public void addModules(Module module) {
+		if (modules == null) {
+			
+			modules = new ArrayList<Module>();
+			
+		}
+		modules.add(module);
+	}
+	
 
 }

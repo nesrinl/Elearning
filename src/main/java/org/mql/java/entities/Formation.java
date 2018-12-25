@@ -14,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -52,10 +53,13 @@ public class Formation {
 			inverseJoinColumns=@JoinColumn(name="memb_id")
 			)
 	private List<Member> members ;
-	
+		
+	@ManyToOne(cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
+	@JoinColumn(name="memb_id")
+	private Member member;
 	
 	public Formation() {
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	
@@ -139,6 +143,16 @@ public class Formation {
 	}
 
 
+	public Member getMember() {
+		return member;
+	}
+
+
+	public void setMember(Member member) {
+		this.member = member;
+	}
+
+
 	@Override
 	public String toString() {
 		return "Formation [id=" + id + ", title=" + title + ", creatingDate=" + creatingDate + ", creatingby="
@@ -164,4 +178,6 @@ public class Formation {
 		}
 		members.add(membr);
 	}
+	
+	
 }

@@ -6,10 +6,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -50,6 +53,14 @@ public class Module {
 	@OneToMany(mappedBy= "module" , cascade= {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH})
 	private  List<Streaming> streams;
 	
+	@ManyToMany(fetch=FetchType.LAZY,cascade={CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH} )
+	@JoinTable(
+			name="teach", 
+			joinColumns=@JoinColumn(name="mod_id"),
+			inverseJoinColumns=@JoinColumn(name="memb_id")
+			)
+	private List<Member> members ;
+	
 	public Formation getFormation() {
 		return formation;
 	}
@@ -58,8 +69,9 @@ public class Module {
 	}
 	
 	public Module() {
-		// TODO Auto-generated constructor stub
+		
 	}
+	
 	public Module(String title, String description, float reting, String type) {
 		super();
 		this.title = title;
@@ -112,6 +124,7 @@ public class Module {
 	public void setStreams(List<Streaming> streams) {
 		this.streams = streams;
 	}
+	
 	public void add(Streaming stream) {
 		if (streams == null) {
 			
